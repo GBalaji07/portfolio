@@ -1,3 +1,7 @@
+require('dotenv').config();
+
+
+
 const express =require('express')
 const mongoose=require('mongoose')
 const cors=require('cors')
@@ -9,9 +13,20 @@ app.use(cors());
 app.use(express.json());
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/curd')
-.then(()=>console.log('MongoDb connected'))
-.catch((err)=>console.log('error connecting to mongoDB',err));
+const PORT = process.env.PORT || 3002; // Use PORT from .env or default to 3001
+const MONGO_URI = process.env.MONGO_URI;
+
+
+// mongoose.connect('mongodb://127.0.0.1:27017/curd')
+// .then(()=>console.log('MongoDb connected'))
+// .catch((err)=>console.log('error connecting to mongoDB',err));
+
+mongoose.connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.log('Error connecting to MongoDB:', err));
 
 app.post('/createUser',(req,res)=>{
     UserModel.create(req.body)
@@ -23,7 +38,7 @@ app.post('/createUser',(req,res)=>{
 })
 
 
-app.listen(3002,()=>{
-    console.log('server is running on port 3002');
+app.listen(PORT, () => {
     
-})
+    console.log(`Server is running on port ${PORT}`);
+});
